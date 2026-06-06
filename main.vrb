@@ -1,0 +1,4 @@
+\frametitle{Annexe: Bannière finale de succès}
+  \begin{lstlisting}[language=Python]
+print_prover_success_banner(start_all, channel, len(ptrace), len(state_eval))
+  \end{lstlisting}
