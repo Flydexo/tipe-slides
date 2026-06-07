@@ -26,13 +26,33 @@
   \end{frame}
 }
 \section{Objectif et motivations}
+
+\begin{frame}
+\frametitle{Problématique}
+
+\begin{block}{Question scientifique}
+Comment prouver la connaissance d'un secret, de façon vérifiable et efficace, sans le révéler ?
+\end{block}
+
+\begin{itemize}
+    \item Cas d'étude: connaissance d'un mot reconnu par un automate
+    \item Enjeu: preuve courte, vérification rapide
+\end{itemize}
+
+\end{frame}
+
 \begin{frame}
 \frametitle{Objectif}
-Sachant un automate A, prouver qu'on connaît un mot w tel que l'automate reconnaisse ce mot sans le divulguer.
+
+\begin{itemize}
+    \item Automate $A$ connu publiquement
+    \item Prouver: connaître un mot $w$ reconnu par $A$
+    \item Sans divulguer $w$
+\end{itemize}
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.8\textwidth]{automata.png}
+  \includegraphics[width=0.7\textwidth]{automata.png}
   \caption{Un exemple d'automate (csfieldguide.org.nz)}
 \end{figure}
 
@@ -40,7 +60,9 @@ Sachant un automate A, prouver qu'on connaît un mot w tel que l'automate reconn
 
 \begin{frame}
 \frametitle{Motivations}
-Permet de prouver son identité sans révéler des informations supplémentaires.
+\begin{itemize}
+    \item Prouver son identité sans rien révéler de plus
+\end{itemize}
 \end{frame}
 \AtBeginSection[]
 {
@@ -73,72 +95,46 @@ Critères essentiels:
 \begin{frame}
 \frametitle{Prérequis: Arbres de Merkle}
 
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{merkle.png}
-  \caption{Un exemple d'arbre de Merkle (wikipedia.org)}
-\end{figure}
+\begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+        \begin{center}
+            \begin{tikzpicture}[
+                level distance=1.6cm,
+                level 1/.style={sibling distance=3.2cm},
+                level 2/.style={sibling distance=1.5cm},
+                every node/.style={draw, rectangle, rounded corners, align=center, font=\small, minimum width=1.1cm, minimum height=0.6cm},
+                target/.style={fill=green!30, thick, draw=green!60!black},
+                proof/.style={fill=orange!30, thick, draw=orange!80!black},
+                recalc/.style={fill=blue!20, dashed, thick, draw=blue!80!black},
+                normal/.style={fill=gray!10, draw=gray!40, text=gray!50}
+            ]
+            \node[recalc] (root) {Racine}
+                child {node[proof] {$H_{12}$}
+                    child {node[normal] {$L_1$} edge from parent[draw=gray!40]}
+                    child {node[normal] {$L_2$} edge from parent[draw=gray!40]}
+                    edge from parent[draw=blue, thick]
+                }
+                child {node[recalc] {$H_{34}$}
+                    child {node[target] {$L_3$} edge from parent[draw=green!60!black, thick]}
+                    child {node[proof] {$L_4$} edge from parent[draw=orange!80!black, thick]}
+                    edge from parent[draw=blue, thick]
+                };
+            \end{tikzpicture}
+        \end{center}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+        \begin{itemize}
+            \item Preuve d'appartenance: \textcolor{orange}{\textbf{nœuds frères}} seulement
+            \item Recalcul itératif (\textcolor{blue}{\textbf{bleu}}) jusqu'à la racine
+            \item Taille de preuve: $\mathcal{O}(\log_2 N)$
+        \end{itemize}
+        \begin{block}{Reconstruction}
+            \centering
+            $H_{\text{parent}} = \text{Hash}(H_{\text{g}} \parallel H_{\text{d}})$
+        \end{block}
+    \end{column}
+\end{columns}
 
-\end{frame}
-
-\begin{frame}{Attestation d'une valeur spécifique}
-    \begin{columns}[T]
-
-        % Colonne de gauche : Explications et Formule
-        \begin{column}{0.5\textwidth}
-            % \vspace{0.3cm}
-            \textbf{Le Chemin d'Authentification}
-            % \vspace{0.2cm}
-            \begin{itemize}
-                \item Pour prouver qu'une feuille (\textcolor{green!60!black}{\textbf{Valeur $L_3$}}) appartient à l'arbre, on ne transmet pas tout l'arbre.
-                \item On fournit uniquement les \textbf{nœuds frères} sur le chemin (\textcolor{orange}{\textbf{nœuds oranges}}).
-                \item Le vérificateur recalcule les parents itérativement (\textcolor{blue}{\textbf{nœuds bleus}}) jusqu'à la racine.
-            \end{itemize}
-
-            % \vspace{0.5cm}
-
-            % \vspace{0.3cm}
-            \small{\textit{Efficacité :} La taille de la preuve n'est que de $\mathcal{O}(\log_2(N))$ éléments, rendant les STARKs très compacts pour de grandes traces d'exécution.}
-        \end{column}
-
-        % Colonne de droite : Arbre avec TikZ
-        \begin{column}{0.5\textwidth}
-            \begin{center}
-                \begin{tikzpicture}[
-                    level distance=1.6cm,
-                    level 1/.style={sibling distance=3.2cm},
-                    level 2/.style={sibling distance=1.5cm},
-                    every node/.style={draw, rectangle, rounded corners, align=center, font=\small, minimum width=1.1cm, minimum height=0.6cm},
-                    target/.style={fill=green!30, thick, draw=green!60!black},
-                    proof/.style={fill=orange!30, thick, draw=orange!80!black},
-                    recalc/.style={fill=blue!20, dashed, thick, draw=blue!80!black},
-                    normal/.style={fill=gray!10, draw=gray!40, text=gray!50}
-                ]
-
-                % Construction de l'arbre
-                \node[recalc] (root) {Racine\\(comparée)}
-                    child {node[proof] {$H_{12}$}
-                        child {node[normal] {$L_1$} edge from parent[draw=gray!40]}
-                        child {node[normal] {$L_2$} edge from parent[draw=gray!40]}
-                        edge from parent[draw=blue, thick]
-                    }
-                    child {node[recalc] {$H_{34}$}
-                        child {node[target] {$L_3$\\(Valeur)} edge from parent[draw=green!60!black, thick]}
-                        child {node[proof] {$L_4$} edge from parent[draw=orange!80!black, thick]}
-                        edge from parent[draw=blue, thick]
-                    };
-
-                \end{tikzpicture}
-            \end{center}
-            \begin{block}{Formule de reconstruction}
-                \centering
-                \vspace{0.2cm}
-                $H_{\text{parent}} = \text{Hash}\left(H_{\text{gauche}} \parallel H_{\text{droite}}\right)$
-                \vspace{0.2cm}
-            \end{block}
-        \end{column}
-
-    \end{columns}
 \end{frame}
 
 \begin{frame}
@@ -174,13 +170,11 @@ Critères essentiels:
 \begin{frame}
 \frametitle{Architecture ZK-STARK}
 
-\begin{block}{Définition ZK-STARK}
-Zero-Knowledge, Succint, Transparent, Argument of Knowledge. En français, argument succint et transparent de connaissance à divulgation nulle de connaissance, ie. prouver qu'on connaît un certain $w$ (témoin) satisfiant une propriété $P$ sans divulguer $w$.
-\end{block}
-
-\begin{flushleft}
-Une Architecture de ZK-STARK se compose de deux entités, le prouveur et le vérificateur. Généralement le prouver est une entité centrale qui a une grosse puissance de calcul et des données qu'elle souhaite garder privées et le vérificateur est accessible publiquement et à une puissance de calcul moindre. Cas d'usage: vérification de programmes lourds sur une blockchain publique.
-\end{flushleft}
+\begin{itemize}
+    \item \textbf{Prouveur}: forte puissance de calcul, données privées
+    \item \textbf{Vérificateur}: accès public, faible puissance de calcul
+    \item Cas d'usage: vérification de programmes sur une blockchain publique
+\end{itemize}
 
 \end{frame}
 
@@ -191,8 +185,11 @@ Une Architecture de ZK-STARK se compose de deux entités, le prouveur et le vér
 Je connais un mot $W$ accepté par un automate $A$
 \end{block}
 
-Les variables en majuscule sont publiques et les variables en minuscules ne sont accessibles au prouveur.
-Pour prouver cela, l'idée est de prouver que chaque transition de l'automate est correcte.
+\begin{itemize}
+    \item Majuscules: variables publiques
+    \item Minuscules: connues du seul prouveur
+    \item Idée: prouver que chaque transition est correcte
+\end{itemize}
 
 \end{frame}
 \AtBeginSection[]
@@ -205,7 +202,10 @@ Pour prouver cela, l'idée est de prouver que chaque transition de l'automate es
 \section{AIR}
 \begin{frame}
 \frametitle{AIR - Algebraic Intermediate Representation}
-Une AIR est un moyen de transformer un problème de calcul en problème algébrique. On veut donc prouver que les transitions entre chaque états de l'automate sont valides.
+\begin{itemize}
+    \item AIR: transformer un calcul en problème algébrique
+    \item But: prouver la validité de chaque transition
+\end{itemize}
 
 \begin{table}[h]
 \centering
@@ -229,11 +229,13 @@ Une AIR est un moyen de transformer un problème de calcul en problème algébri
 
 \begin{frame}
 \frametitle{AIR - Algebraic Intermediate Representation}
-On va utiliser des polynomes. Plus précisément un polynôme par colonne. Donc un polynôme étape $P_i$, état $P_e$ et caractère $P_c$. Pour cela on utilie l'interpolation de Lagrange. Par exemple:
+\begin{itemize}
+    \item Un polynôme par colonne ($P_i$, $P_e$, $P_c$), via interpolation de Lagrange
+\end{itemize}
 
 $$P_e = \frac{11x^5}{120} - \frac{35x^4}{24} + \frac{65x^3}{8} - \frac{445x^2}{24} + \frac{887x}{60} + 1$$
 
-On veut maintenant prouver que notre exécution, donc nos polynômes respectent les 3 contraintes suivantes:
+3 contraintes à respecter:
 \begin{enumerate}
   \item L'exécution démarre à l'état initial
   \item Chaque transition est valide (est dans la définition de l'automate donné en paramètre)
@@ -242,9 +244,8 @@ On veut maintenant prouver que notre exécution, donc nos polynômes respectent 
 \end{frame}
 \begin{frame}
 \frametitle{AIR - Algebraic Intermediate Representation}
-On doit transformer ces contraintes en polynômes. Comme on a la propriété suivante:
+Contraintes $\to$ polynômes, via:
 $$P(x) = 0 \iff (X - x) | P \iff \frac{P}{X-x} \text{ est un polynôme}$$
-Nos contraintes deviennent:
 \begin{columns}[T]
 \begin{column}{0.5\textwidth}
 \begin{enumerate}
@@ -254,17 +255,20 @@ Nos contraintes deviennent:
 \end{enumerate}
 \end{column}
 \begin{column}{0.5\textwidth}
-Avec $P_t$ le polynôme à deux variables de transitions valides qui à un état de départ et un caractère associe un unique état de destination.
+$P_t$: polynôme de transition (état, caractère) $\to$ état suivant
 \end{column}
 \end{columns}
 \end{frame}
 
 \begin{frame}
 \frametitle{CP - Polynôme de composition}
-On veut maintenant appliquer le protocole FRI. Pour des raisons de simplicité, on va se ramener à un seul polynôme pour cela, on va créer le polyôme de composition (CP) suivant:
+Combiner les contraintes en un seul polynôme, pour appliquer FRI:
 $$CP = \alpha_0 C_0 + \alpha_1 C_1 + \alpha_2 C_2$$
 
-Avec $\alpha_0, \alpha_1, \alpha_2$ des coefficients tirés aléatoirement de manière uniforme par le vérificateur. Ils servent à éviter que le prouveur ne triche, c'est-à-dire à garder l'équivalence $CP(x) = 0 \iff_{\text{en probabilités}} C_0(x) = 0 \text{ et } C_1(x) = 0 \text{ et } C_2(x) = 0$. On peut prouver que cela fonctionne même si le vérificateur "triche", c'est-à-dire qu'il choisit les coefficients.
+\begin{itemize}
+    \item $\alpha_0, \alpha_1, \alpha_2$: tirés aléatoirement par le vérificateur
+    \item Garantissent $CP = 0 \iff C_0 = C_1 = C_2 = 0$ (en probabilités), même si le vérificateur choisit les coefficients
+\end{itemize}
 \end{frame}
 \AtBeginSection[]
 {
@@ -277,7 +281,11 @@ Avec $\alpha_0, \alpha_1, \alpha_2$ des coefficients tirés aléatoirement de ma
 \begin{frame}
 \frametitle{Protocole FRI: Fast Reed-Solomon Interactive Oracle Proof of Proximity}
 
-On veut maintenant montrer que notre polynôme de composition s'annule sur toutes les étapes de calcul. Pour cela, on pourrait de manière naïve, envoyer le polynôme au vérificateur et l'ensemble des points. Mais on perd tout l'intérêt: pas de compression, pas de données privées.
+\begin{itemize}
+    \item But: montrer que $CP$ s'annule sur toutes les étapes de calcul
+    \item Solution naïve: envoyer le polynôme et tous les points
+    \item Problème: aucune compression, aucune confidentialité
+\end{itemize}
 
 \end{frame}
 
@@ -285,12 +293,16 @@ On veut maintenant montrer que notre polynôme de composition s'annule sur toute
 \frametitle{Protocole FRI}
 
 \begin{block}{Objectif}
-Prouver que CP est un polynôme. Avec FRI on va se ramener à un polynôme de degré 1. L'opérateur FRI nous permet de se ramener à un polynôme de degré D/2. On le répète jusqu'à atteindre un polynôme constant.
+Montrer que $CP$ est un polynôme, en le ramenant degré par degré (D $\to$ D/2 $\to \dots$) jusqu'à un polynôme constant.
 \end{block}
 
 $$\Delta(f,P) = \frac{|{x\in D | f(x) \ne P(x)}|}{|D|}$$
 
-Plus théoriquement: On veut montrer qu'avec une certaine probabilité, notre fonction est $\delta$ proche d'un polynôme: $P(\Delta(f,P) < \delta) \approx 1$. Et l'opérateur FRI permet de diviser le degré d'un polynôme par 2, sans perdre sa propriété de $\delta$ proche. Ainsi le vérificateur a uniquement besoin de vérifier qu'une série de points est une fonction affine.
+\begin{itemize}
+    \item On montre que $f$ est $\delta$-proche d'un polynôme: $P(\Delta(f,P) < \delta) \approx 1$
+    \item L'opérateur FRI divise le degré par 2 sans perdre cette propriété
+    \item Le vérificateur n'a plus qu'à vérifier des points alignés
+\end{itemize}
 
 \end{frame}
 
@@ -298,7 +310,7 @@ Plus théoriquement: On veut montrer qu'avec une certaine probabilité, notre fo
 \frametitle{Comment fonctionne FRI}
 
 \begin{block}{Inspiration}
-L'idée est la même que l'opérateur FFT pour les polynômes.
+Même idée que la FFT pour les polynômes.
 \end{block}
 
 \begin{enumerate}
@@ -372,7 +384,9 @@ L'idée est de refaire le processus inverse qu'à fait le prouver mais au lieu d
 Je connais un mot $w$ accepté par un automate $A$ tel que $h(w) = H$
 \end{block}
 
-Les variables en majuscule sont publiques et les variables en minuscules ne sont accessibles au prouveur.
+\begin{itemize}
+    \item $A$, $H$: publics — $w$: secret du prouveur
+\end{itemize}
 
 \end{frame}
 
@@ -398,6 +412,10 @@ Les variables en majuscule sont publiques et les variables en minuscules ne sont
     \end{column}
 \end{columns}
 
+\end{frame}
+
+\begin{frame}
+\frametitle{Merci de votre attention}
 \end{frame}
 
 \AtBeginSection[]
