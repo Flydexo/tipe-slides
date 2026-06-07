@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.6.7)  7 JUN 2026 16:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.6.7)  7 JUN 2026 16:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1092,41 +1092,38 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] [27
 
-] [28
+]
+\openout4 = `main.vrb'.
 
-] (./main.toc) [29
+ (./main.vrb) [28
 
-] [30
+] [29
+
+] (./main.toc) [30
+
+] [31
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb (./annex_poseidon.py
+ (./main.vrb
+(./annex_poseidon.py
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4.5> not available
 (Font)              size <4> substituted on input line 1.
 
-)) [31
+)) [32
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb (./annex_poseidon.py)) [32
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb (./annex_prover.py))
-Overfull \vbox (1.11914pt too high) detected at line 526
- []
-
-[33
+ (./main.vrb (./annex_poseidon.py)) [33
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb (./annex_prover.py))
-Overfull \vbox (1.11914pt too high) detected at line 531
+Overfull \vbox (1.11914pt too high) detected at line 551
  []
 
 [34
@@ -1134,40 +1131,44 @@ Overfull \vbox (1.11914pt too high) detected at line 531
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb (./annex_prover.py)) [35
+ (./main.vrb (./annex_prover.py))
+Overfull \vbox (1.11914pt too high) detected at line 556
+ []
+
+[35
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb (./annex_prover.py)) [36
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb (./annex_prover.py))
-[36
+[37
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb (./annex_prover.py)) [37
+ (./main.vrb (./annex_prover.py)) [38
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb (./annex_prover.py))
-[38
+[39
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb (./annex_prover.py)) [39
+ (./main.vrb (./annex_prover.py)) [40
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb (./annex_verifier.py))
-[40
-
-]
-\openout4 = `main.vrb'.
-
- (./main.vrb (./annex_verifier.py)) [41
+[41
 
 ]
 \openout4 = `main.vrb'.
@@ -1182,21 +1183,26 @@ Overfull \vbox (1.11914pt too high) detected at line 531
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb (./annex_verifier.py))
-Overfull \vbox (1.11914pt too high) detected at line 581
- []
-
-[44
+ (./main.vrb (./annex_verifier.py)) [44
 
 ]
 \openout4 = `main.vrb'.
 
- (./main.vrb (./annex_verifier.py)) [45
+ (./main.vrb (./annex_verifier.py))
+Overfull \vbox (1.11914pt too high) detected at line 606
+ []
+
+[45
 
 ]
 \openout4 = `main.vrb'.
 
  (./main.vrb (./annex_verifier.py)) [46
+
+]
+\openout4 = `main.vrb'.
+
+ (./main.vrb (./annex_verifier.py)) [47
 
 ]
 \tf@nav=\write6
@@ -1218,42 +1224,35 @@ L3 programming layer <2024-01-22>
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.5pt have occurred.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 6B9E30567E5DB4DA79F36DBB11DDB6D2;676.
  ) 
 Here is how much of TeX's memory you used:
- 28839 strings out of 476182
- 576255 string characters out of 5795596
+ 28848 strings out of 476182
+ 576360 string characters out of 5795596
  2455975 words of memory out of 5000000
- 50128 multiletter control sequences out of 15000+600000
- 570024 words of font info for 80 fonts, out of 8000000 for 9000
+ 50134 multiletter control sequences out of 15000+600000
+ 570318 words of font info for 81 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  101i,16n,107p,396b,1489s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-pdfTeX warning (dest): name{Navigation47} has been referenced but does not exis
-t, replaced by a fixed one
-
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></
-usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmss9.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmssi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on main.pdf (46 pages, 321059 bytes).
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmss9.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmssi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
+6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on main.pdf (47 pages, 325592 bytes).
 PDF statistics:
- 1595 PDF objects out of 1728 (max. 8388607)
- 1377 compressed objects within 14 object streams
- 102 named destinations out of 1000 (max. 500000)
+ 1624 PDF objects out of 1728 (max. 8388607)
+ 1402 compressed objects within 15 object streams
+ 103 named destinations out of 1000 (max. 500000)
  441 words of extra memory for PDF output out of 10000 (max. 10000000)
 
