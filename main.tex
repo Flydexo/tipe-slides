@@ -2,8 +2,27 @@
 \usetheme{Madrid}
 \usepackage{booktabs}
 \usepackage{listings}
+\usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{amsmath}
+\usetikzlibrary{automata,positioning,arrows.meta,decorations.pathreplacing,calc}
+
+\lstset{
+  basicstyle=\fontsize{5.2}{5.6}\ttfamily,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red!70!black},
+  showstringspaces=false,
+  breaklines=true,
+  language=Python,
+  numbers=left,
+  numberstyle=\fontsize{4.5}{5}\selectfont\color{gray},
+  xleftmargin=1.2em,
+  framexleftmargin=1em,
+  aboveskip=0pt,
+  belowskip=0pt,
+  backgroundcolor=\color{white}
+}
 
 %Information to be included in the title page:
 \title{Prouver l'exécution d'un automate (STARK)}
@@ -54,8 +73,19 @@ divulguer le contenu ?
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.7\textwidth]{automata.png}
-  \caption{Un exemple d'automate (csfieldguide.org.nz)}
+  \begin{tikzpicture}[shorten >=1pt, node distance=2.4cm, on grid, auto,
+      every state/.style={minimum size=0.9cm, font=\small}]
+    \node[state, initial] (q0) {$q_0$};
+    \node[state] (q1) [right=of q0] {$q_1$};
+    \node[state, accepting] (q2) [right=of q1] {$q_2$};
+    \path[->]
+      (q0) edge [loop above] node {b} (q0)
+      (q0) edge node {a} (q1)
+      (q1) edge [loop above] node {a} (q1)
+      (q1) edge node {b} (q2)
+      (q2) edge [bend left=15, below] node {a, b} (q0);
+  \end{tikzpicture}
+  \caption{Un automate $A$: états, transitions, état initial/acceptant}
 \end{figure}
 
 \end{frame}
@@ -74,8 +104,15 @@ divulguer le contenu ?
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.5\textwidth]{hash.png}
-  \caption{Illustration d'une fonction de hachage (techno-science.net)}
+  \begin{tikzpicture}[font=\scriptsize,
+      box/.style={draw, rounded corners, align=center, minimum height=0.6cm}, node distance=0.45cm]
+    \node[box, fill=gray!10, minimum width=2.6cm] (msg) {message $m$ (taille variable)};
+    \node[box, fill=blue!20, thick, minimum width=0.9cm, minimum height=0.9cm, below=of msg] (h) {$H$};
+    \node[box, fill=green!20, minimum width=2.6cm, below=of h] (digest) {empreinte $h(m)$ (taille fixe)};
+    \draw[-{Latex}, thick] (msg) -- (h);
+    \draw[-{Latex}, thick] (h) -- (digest);
+  \end{tikzpicture}
+  \caption{Une fonction de hachage: entrée variable, sortie fixe}
 \end{figure}
 
 Critères essentiels:
@@ -136,19 +173,32 @@ Critères essentiels:
 \begin{frame}
 \frametitle{Prérequis: L'heuristique de Fiat-Shamir}
 
-\begin{columns}[T]
+\begin{columns}[c]
 \begin{column}{0.5\textwidth}
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.8\textwidth]{random-sequence.png}
-  \caption{Version intéractive}
+  \begin{tikzpicture}[font=\scriptsize, >={Latex}, node distance=2.6cm]
+    \node (P) {Prouveur};
+    \node (V) [right=of P] {Vérificateur};
+    \draw[->, thick] ([yshift=-0.4cm]P.south) -- node[above] {engagement $t$} ([yshift=-0.4cm]V.south);
+    \draw[->, thick] ([yshift=-1.3cm]V.south) -- node[above] {défi $c$ (aléatoire)} ([yshift=-1.3cm]P.south);
+    \draw[->, thick] ([yshift=-2.2cm]P.south) -- node[above] {réponse $s$} ([yshift=-2.2cm]V.south);
+  \end{tikzpicture}
+  \caption{Version interactive}
 \end{figure}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.8\textwidth]{fiat-shamir.png}
-  \caption{Version non intéractive}
+  \begin{tikzpicture}[font=\scriptsize, >={Latex}, node distance=2.6cm,
+      box/.style={draw, rounded corners, fill=blue!15, align=center}]
+    \node (P) {Prouveur};
+    \node (V) [right=of P] {Vérificateur};
+    \node[box] (H) [below=0.5cm of $(P)!0.5!(V)$] {$c = H(t)$};
+    \draw[->, thick] (P.south) -- (H.north);
+    \draw[->, thick] ([yshift=-1.9cm]P.south) -- node[above] {$(t, c, s)$} ([yshift=-1.9cm]V.south);
+  \end{tikzpicture}
+  \caption{Version non interactive: $H$ remplace le vérificateur}
 \end{figure}
 \end{column}
 \end{columns}
@@ -394,16 +444,35 @@ Je connais un mot $w$ accepté par un automate $A$ tel que $h(w) = H$
     \begin{column}{0.5\textwidth}
         \begin{figure}[h!]
             \centering
-            \includegraphics[width=1\textwidth]{sponge.png}
-            \caption{Une fonction de hachage en éponge}
+            \begin{tikzpicture}[font=\scriptsize, >={Latex}, node distance=1.4cm,
+                perm/.style={draw, rounded corners, fill=blue!15, minimum width=0.9cm, minimum height=1.1cm}]
+              \node[perm] (p1) {$\pi$};
+              \node[perm] (p2) [right=of p1] {$\pi$};
+              \node[perm] (p3) [right=of p2] {$\pi$};
+              \draw[->, thick] (p1) -- (p2);
+              \draw[->, thick] (p2) -- (p3);
+              \draw[->, thick] ([yshift=0.9cm]p1.north) -- node[right] {$m_1$} (p1.north);
+              \draw[->, thick] ([yshift=0.9cm]p2.north) -- node[right] {$m_2$} (p2.north);
+              \draw[->, thick] (p3.north) -- node[right] {$z$} ++(0,0.9);
+            \end{tikzpicture}
+            \caption{Éponge: absorption ($m_i$) puis extraction ($z$), via $\pi$}
         \end{figure}
     \end{column}
 
     \begin{column}{0.5\textwidth}
         \begin{figure}[h!]
             \centering
-            \includegraphics[width=0.5\textwidth]{perm.png}
-            \caption{La permutation poséidon}
+            \begin{tikzpicture}[font=\scriptsize, >={Latex}, node distance=0.6cm,
+                box/.style={draw, rounded corners, align=center, minimum width=2.6cm, minimum height=0.7cm}]
+              \node[box, fill=orange!15] (arc) {ARC: $+\,c_i$};
+              \node[box, fill=green!15] (sbox) [below=of arc] {S-box: $x \mapsto x^5$\\(complet ou partiel)};
+              \node[box, fill=blue!15] (mds) [below=of sbox] {MDS: $\times\, M$ (Cauchy)};
+              \draw[->, thick] (arc) -- (sbox);
+              \draw[->, thick] (sbox) -- (mds);
+              \draw[->, thick] ([yshift=0.6cm]arc.north) -- node[right]{état} (arc.north);
+              \draw[->, thick] (mds.south) -- ++(0,-0.6) node[below]{};
+            \end{tikzpicture}
+            \caption{Un tour de la permutation $\pi$ (répété $r_f + r_p$ fois)}
         \end{figure}
     \end{column}
 \end{columns}
@@ -411,7 +480,11 @@ Je connais un mot $w$ accepté par un automate $A$ tel que $h(w) = H$
 \end{frame}
 
 \begin{frame}
-\frametitle{Merci de votre attention}
+\vfill
+\begin{center}
+    {\Huge Merci de votre attention}
+\end{center}
+\vfill
 \end{frame}
 
 \AtBeginSection[]
@@ -436,158 +509,84 @@ Je connais un mot $w$ accepté par un automate $A$ tel que $h(w) = H$
     \item 02/26: Gros problème
 \end{enumerate}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{1.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Poséidon (1/2)}
+\vspace{-2mm}
+\lstinputlisting[firstline=1,lastline=39]{annex_poseidon.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{2.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Poséidon (2/2)}
+\vspace{-2mm}
+\lstinputlisting[firstline=41,lastline=61]{annex_poseidon.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{3.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Prouveur (1/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=1,lastline=41]{annex_prover.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{4.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Prouveur (2/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=43,lastline=77]{annex_prover.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{5.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Prouveur (3/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=79,lastline=112]{annex_prover.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{6.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Prouveur (4/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=114,lastline=151]{annex_prover.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{7.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Prouveur (5/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=153,lastline=191]{annex_prover.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{8.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Prouveur (6/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=193,lastline=212]{annex_prover.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{9.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Prouveur (7/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=213,lastline=241]{annex_prover.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{10.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Vérifieur (1/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=1,lastline=37]{annex_verifier.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{11.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Vérifieur (2/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=38,lastline=75]{annex_verifier.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{12.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Vérifieur (3/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=76,lastline=113]{annex_verifier.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{13.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Vérifieur (4/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=114,lastline=151]{annex_verifier.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{14.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Vérifieur (5/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=152,lastline=189]{annex_verifier.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{15.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Vérifieur (6/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=190,lastline=227]{annex_verifier.py}
 \end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{16.png}
-\end{figure}
-\end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{17.png}
-\end{figure}
-\end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{18.png}
-\end{figure}
-\end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{19.png}
-\end{figure}
-\end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{20.png}
-\end{figure}
-\end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{21.png}
-\end{figure}
-\end{frame}
-\begin{frame}
-\frametitle{Annexe: Code}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.8\textwidth]{22.png}
-\end{figure}
+\begin{frame}[fragile]
+\frametitle{Annexe: Code -- Vérifieur (7/7)}
+\vspace{-2mm}
+\lstinputlisting[firstline=228,lastline=251]{annex_verifier.py}
 \end{frame}
 \end{document}
