@@ -1,7 +1,7 @@
 \beamer@sectionintoc {1}{Objectif et motivations}{3}{0}{1}
-\beamer@sectionintoc {2}{Prérequis}{7}{0}{2}
-\beamer@sectionintoc {3}{Définitions}{11}{0}{3}
-\beamer@sectionintoc {4}{AIR}{14}{0}{4}
-\beamer@sectionintoc {5}{FRI}{19}{0}{5}
-\beamer@sectionintoc {6}{Récapitulatif}{23}{0}{6}
-\beamer@sectionintoc {7}{Conclusion}{30}{0}{7}
+\beamer@sectionintoc {2}{Prérequis}{6}{0}{2}
+\beamer@sectionintoc {3}{Définitions}{10}{0}{3}
+\beamer@sectionintoc {4}{AIR}{13}{0}{4}
+\beamer@sectionintoc {5}{FRI}{18}{0}{5}
+\beamer@sectionintoc {6}{Récapitulatif}{22}{0}{6}
+\beamer@sectionintoc {7}{Conclusion}{29}{0}{7}
